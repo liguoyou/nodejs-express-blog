@@ -1,2 +1,1 @@
-# nodejs-express-blog
-nodejs 博客开发 - express
+# Nodejs 博客开发 - express 版本
