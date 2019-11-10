@@ -9,6 +9,9 @@ const {
 } = require('../controller/blog')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
+// 校验登录的中间件
+const loginCheck = require('../middleware/loginCheck')
+
 // 错误输出
 function errorOutput(res, error, text) {
   console.log(error)
@@ -22,13 +25,16 @@ router.get('/list', function(req, res, next) {
   const keyword = req.query.keyword || ''
 
   // 管理员界面
-  // if (req.query.isadmin) {
-  //   // 登录权限验证
-  //   if (loginCheckResult) return loginCheckResult
+  if (req.query.isadmin) {
+    // 登录权限验证
+    if (!req.session.username) {
+      res.json(new ErrorModel('未登录'))
+      return
+    }
 
-  //   // 强制查询自己的博客
-  //   author = req.session.username
-  // }
+    // 强制查询自己的博客
+    author = req.session.username
+  }
 
   getList(author, keyword)
     .then(listData => {
@@ -55,6 +61,7 @@ router.get('/detail', function(req, res, next) {
         return
       }
 
+      console.log(data)
       res.json(new ErrorModel('未查询到数据'))
     })
     .catch(error => {
@@ -63,18 +70,14 @@ router.get('/detail', function(req, res, next) {
 })
 
 // 新增博客
-router.post('/new', function(req, res, next) {
-  // 登录权限验证
-  // if (loginCheckResult) return loginCheckResult
-
+router.post('/new', loginCheck, function(req, res, next) {
   const body = req.body
   if (!body.title || !body.content) {
     res.json(new ErrorModel('参数不能为空'))
     return
   }
 
-  // body.author = req.session.username
-  const author = 'liguoyou'
+  const author = req.session.username
   newBlog(body, author)
     .then(inResult => {
       if (inResult && inResult.id) {
@@ -82,6 +85,7 @@ router.post('/new', function(req, res, next) {
         return
       }
 
+      console.log(inResult)
       res.json(new ErrorModel('新增失败'))
     })
     .catch(error => {
@@ -90,10 +94,7 @@ router.post('/new', function(req, res, next) {
 })
 
 // 更新博客内容
-router.post('/update', function(req, res, next) {
-  // 登录权限验证
-  // if (loginCheckResult) return loginCheckResult
-
+router.post('/update', loginCheck, function(req, res, next) {
   const id = req.query.id
   const body = req.body
 
@@ -102,8 +103,7 @@ router.post('/update', function(req, res, next) {
     return
   }
 
-  // const author = req.session.username
-  const author = 'guoyou'
+  const author = req.session.username
   updateBlog(id, body, author)
     .then(result => {
       if (result) {
@@ -111,6 +111,7 @@ router.post('/update', function(req, res, next) {
         return
       }
 
+      console.log(result)
       res.json(new ErrorModel('更新失败'))
     })
     .catch(error => {
@@ -119,24 +120,22 @@ router.post('/update', function(req, res, next) {
 })
 
 // 删除博客
-router.delete('/del', function(req, res, next) {
-  // 登录权限验证
-  // if (loginCheckResult) return loginCheckResult
-
+router.delete('/del', loginCheck, function(req, res, next) {
   const id = req.query.id
   if (!id) {
     res.json(new ErrorModel('参数不能为空'))
     return
   }
 
-  // const author = req.session.username
-  const author = 'guoyou'
+  const author = req.session.username
   delBlog(id, author)
     .then(result => {
       if (result) {
         res.json(new SuccessModel('删除成功'))
         return
       }
+
+      console.log(result)
       res.json(new ErrorModel('删除失败'))
     })
     .catch(error => {

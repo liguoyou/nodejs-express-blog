@@ -1,6 +1,10 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
 
+const { login } = require('../controller/user')
+const { SuccessModel, ErrorModel } = require('../model/resModel')
+
+// 用户登录
 router.post('/login', function(req, res, next) {
   const username = req.body.username
   const password = req.body.password
@@ -21,9 +25,6 @@ router.post('/login', function(req, res, next) {
         // 操作cookie
         req.session.username = resData.username
         req.session.realName = resData.realName
-
-        // 同步 redis
-        // set(req.sessionId, req.session)
 
         res.json(new SuccessModel('登录成功'))
         return
