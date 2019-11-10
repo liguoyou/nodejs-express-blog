@@ -2,6 +2,8 @@ var createError = require('http-errors')
 var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
+
+// 日志
 var logger = require('morgan')
 
 // 导入 express-session 插件
@@ -22,7 +24,28 @@ var app = express()
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 
-app.use(logger('dev'))
+// 日志生成
+const ENV = process.env.NODE_ENV
+if (ENV !== 'production') {
+  // 开发|测试环境
+  app.use(
+    logger('dev', {
+      stream: process.output // 默认
+    })
+  )
+} else {
+  // 生产环境
+  const fs = require('fs')
+  const logFileName = path.join(__dirname, 'logs', 'access.log')
+  const writeStream = fs.createWriteStream(logFileName, {
+    flags: 'a' // append 追加
+  })
+  app.use(
+    logger('combined', {
+      stream: writeStream
+    })
+  )
+}
 
 // 解析 body
 app.use(express.json())
