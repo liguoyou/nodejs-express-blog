@@ -1,8 +1,3 @@
-# Nodejs 博客开发 - express 版本
-
-
-***
-
 ## 接口列表
 
 ### 所有错误
@@ -56,4 +51,36 @@
 }
 ```
 
-[查看所有接口列表](./API.md)
+### 获取博客详情 `/api/blog/detail?id=`
+
+实例: 
+```
+/api/blog/detail?id=34
+```
+
+返回:
+```
+{
+    "data": {
+        "id": 3,
+        "title": "博客标题A",
+        "content": "博客内容A",
+        "author": "guoyou",
+        "createtime": 1572779880317,
+        "state": 1
+    },
+    "errno": 0
+}
+```
+
+### 新增博客 `/api/blog/new`
+
+返回: 
+```
+{
+    "data": {
+        "id": 19
+    },
+    "errno": 0
+}
+```
