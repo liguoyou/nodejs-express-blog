@@ -12,8 +12,8 @@ const session = require('express-session')
 // redis
 const RedisStore = require('connect-redis')(session)
 
-var indexRouter = require('./routes/index')
-var usersRouter = require('./routes/users')
+// var indexRouter = require('./routes/index')
+// var usersRouter = require('./routes/users')
 
 var blogRouter = require('./routes/blog')
 var userRouter = require('./routes/user')
@@ -21,8 +21,8 @@ var userRouter = require('./routes/user')
 var app = express()
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'jade')
+// app.set('views', path.join(__dirname, 'views'))
+// app.set('view engine', 'jade')
 
 // 日志生成
 const ENV = process.env.NODE_ENV
@@ -53,7 +53,7 @@ app.use(express.urlencoded({ extended: false }))
 
 // 解析 cookie
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
+// app.use(express.static(path.join(__dirname, 'public')))
 
 // session redis 配置, 将 session 存到 redis 中
 const redisClient = require('./db/redis.js')
@@ -76,8 +76,8 @@ app.use(
   })
 )
 
-app.use('/', indexRouter)
-app.use('/users', usersRouter)
+// app.use('/', indexRouter)
+// app.use('/users', usersRouter)
 
 app.use('/api/blog', blogRouter)
 app.use('/api/user', userRouter)
@@ -95,7 +95,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500)
-  res.render('error')
+  res.send(`error: ${err.message}, ${err.status}`)
 })
 
 module.exports = app
