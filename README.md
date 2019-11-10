@@ -73,4 +73,4 @@
 - [原生开发版](https://github.com/liguoyou/nodejs-blog)
 - [koa2 重构版](https://github.com/liguoyou/nodejs-koa2-blog)
 
-参考/来源: [前端晋升全栈工程师必备课程 Node.js 从零开发 web server 博客项目](https://coding.imooc.com/class/320.html)
+学习来源: [前端晋升全栈工程师必备课程 Node.js 从零开发 web server 博客项目](https://coding.imooc.com/class/320.html)
